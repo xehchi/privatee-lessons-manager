@@ -1,0 +1,57 @@
+{
+  "workHours": {
+    "0": [
+      {
+        "id": "ff6d50ff-2711-4404-93d7-5a55a7ea16d0",
+        "start": "09:00",
+        "end": "17:00"
+      }
+    ],
+    "1": [
+      {
+        "id": "6fb9ad99-1eed-47b7-85a1-a6dc0e7c810f",
+        "start": "09:00",
+        "end": "17:00"
+      }
+    ],
+    "2": [
+      {
+        "id": "05a71c3f-766c-4469-8c41-cd3d72ac2062",
+        "start": "09:00",
+        "end": "17:00"
+      }
+    ],
+    "3": [
+      {
+        "id": "fa287b99-98ba-4297-8daa-8bcad798a69b",
+        "start": "09:00",
+        "end": "17:00"
+      }
+    ],
+    "4": [
+      {
+        "id": "9a7deeb6-32a2-4b7b-a990-d2692f9245bf",
+        "start": "09:00",
+        "end": "17:00"
+      }
+    ],
+    "5": []
+  },
+  "lessons": [
+    {
+      "id": "56a3fb7f-a94c-4d7c-9457-9cedd1880f50",
+      "studentName": "שרה כהל",
+      "day": 0,
+      "type": "double",
+      "start": "12:00"
+    },
+    {
+      "id": "6de83fa9-ace1-4c40-b172-aee58d43709f",
+      "studentName": "יאעעיעיעי",
+      "cardNumber": "546989",
+      "day": 1,
+      "type": "double",
+      "start": "09:45"
+    }
+  ]
+}

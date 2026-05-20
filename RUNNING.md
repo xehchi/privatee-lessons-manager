@@ -1,0 +1,116 @@
+# הוראות הרצה מקומית – יומן שיעורים
+
+מערכת זו פועלת במלואה **אופליין** לאחר התקנה ראשונית. הנתונים נשמרים מקומית בדפדפן (localStorage), והאפליקציה אינה תלויה בשירותים חיצוניים בזמן ריצה.
+
+---
+
+## אופציה 1 – הרצה עם Node.js + npm (פשוט)
+
+### דרישות
+- Node.js 20 ומעלה ([https://nodejs.org](https://nodejs.org))
+- npm (מותקן יחד עם Node)
+
+### צעדים
+
+```bash
+# התקנת תלויות (פעם אחת, דורש אינטרנט)
+npm install
+
+# מצב פיתוח (hot reload)
+npm run dev
+# → http://localhost:5173
+
+# או: בנייה לייצור והרצה כסטטי
+npm run build
+npx serve -s dist -l 3000
+# → http://localhost:3000
+```
+
+לאחר ההתקנה, ניתן להעתיק את התיקייה למחשב לא מחובר ולהריץ `npm run dev` או לשרת את `dist/` עם כל שרת סטטי (serve, http-server, nginx וכו׳).
+
+---
+
+## אופציה 2 – הרצה עם Docker (מומלץ לפריסה)
+
+### דרישות
+- Docker Desktop / Docker Engine ([https://docker.com](https://docker.com))
+- docker compose (מובנה ב-Docker Desktop)
+
+### צעדים
+
+```bash
+# בנייה והרצה
+docker compose up -d --build
+
+# הצגת לוגים
+docker compose logs -f
+
+# עצירה
+docker compose down
+```
+
+האפליקציה תהיה זמינה בכתובת: **http://localhost:3000**
+
+### עדכון לאחר שינוי קוד
+
+```bash
+docker compose up -d --build
+```
+
+### הרצה אופליין מלאה עם Docker
+
+לאחר הבנייה הראשונית (שדורשת אינטרנט להורדת ה-base image וה-npm packages), ניתן לייצא את ה-image ולהשתמש בו ללא רשת:
+
+```bash
+# במחשב מחובר:
+docker compose build
+docker save schedule-app_schedule-app:latest -o schedule-app.tar
+
+# במחשב מנותק:
+docker load -i schedule-app.tar
+docker compose up -d
+```
+
+---
+
+## ניהול נתונים
+
+- **אחסון on-prem (Docker / Node מקומי)**: הנתונים נשמרים כקובץ `data/schedule.json` בתוך תיקיית הפרויקט (mount-volume ב-docker-compose). שינויים נכתבים אוטומטית לדיסק (debounce של 400ms). כך כל המידע נשאר בשליטתך המלאה ואינו תלוי בדפדפן.
+- **גיבוי אופליין בדפדפן**: גיבוי משני נשמר ב-localStorage כדי לאפשר עבודה גם אם השרת לא זמין רגעית.
+- **דוח אקסל**: ייצוא דוח שבועי דרך כפתור "ייצוא לאקסל".
+- **הדפסה / PDF**: כפתור "הדפסה / PDF" בלוח פותח תצוגת הדפסה נקייה. ניתן לבחור "Save as PDF".
+- **גיבוי קל**: ניתן להעתיק את הקובץ `data/schedule.json` לכל מקום שתרצי.
+
+---
+
+## פתרון בעיות
+
+| בעיה | פתרון |
+|------|-------|
+| פורט 3000 תפוס | שני את המיפוי ב-`docker-compose.yml`: `"8080:3000"` |
+| שגיאות התקנה ב-`npm install` | מחקי `node_modules` ו-`package-lock.json` והריצי שוב |
+| הדף ריק לאחר build | ודאי ש-`base: './'` מוגדר ב-`vite.config.ts` (לפריסה תחת תת-נתיב) |
+| נתונים נעלמו | localStorage נמחק עם הניקוי של נתוני הדפדפן. השתמשי בייצוא לאקסל לגיבוי |
+
+---
+
+## מבנה הפרויקט
+
+```
+src/
+├── components/        # רכיבי React (לוח זמנים, דיאלוגים, כותרת)
+├── lib/               # לוגיקת לוח זמנים, אחסון, ייצוא אקסל
+├── routes/            # ראוטים (TanStack Router)
+└── styles.css         # עיצוב + סגנונות הדפסה
+Dockerfile             # תמונה לבנייה והרצה
+docker-compose.yml     # תזמורת
+```
+
+---
+
+## טכנולוגיות
+
+- **React 19** + **TanStack Router** + **Vite 7**
+- **Tailwind CSS 4** + רכיבי shadcn/ui
+- **xlsx** לייצוא דוחות
+- **Heebo / system fonts** – ללא תלות ב-Google Fonts בזמן ריצה

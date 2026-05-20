@@ -1,0 +1,10 @@
+services:
+  schedule-app:
+    build: .
+    container_name: schedule-app
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    # Persistent volume for any future server-side JSON storage
+    volumes:
+      - ./data:/app/data
